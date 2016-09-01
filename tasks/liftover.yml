@@ -1,14 +1,23 @@
 ---
 # Liftover installation recipe
 
+#---
+# CentOS 7
 - name: Install Liftover depedencencies
   yum: name=libpng12
        state=present
   become_user: root
   become_method: sudo
+  when: ansible_os_family == "RedHat"
+
+#---
+# Ubuntu 14.04
+
+
+#---
 
 - name: Create Liftover destination directory
-  file: path=/opt/Liftover
+  file: path=/opt/liftOver
         state=directory
         owner={{galaxy_user}}
         group={{galaxy_user}}
@@ -16,9 +25,9 @@
   become_method: sudo
 
 - name: Download liftover
-  get_url: url=hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver
+  get_url: url=http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver
            dest=/opt/liftOver/
-           mode="+x"
+           mode="a+x"
   become_user: root
   become_method: sudo
 
@@ -26,3 +35,6 @@
   lineinfile: dest=/home/{{galaxy_user}}/.bashrc
               line="\n# Liftover binary path\nexport PATH=$PATH:/opt/liftOver"
               state=present
+
+#---
+# loc file configuration
