@@ -1,0 +1,28 @@
+---
+# Liftover installation recipe
+
+- name: Install Liftover depedencencies
+  yum: name=libpng12
+       state=present
+  become_user: root
+  become_method: sudo
+
+- name: Create Liftover destination directory
+  file: path=/opt/Liftover
+        state=directory
+        owner={{galaxy_user}}
+        group={{galaxy_user}}
+  become_user: root
+  become_method: sudo
+
+- name: Download liftover
+  get_url: url=hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver
+           dest=/opt/liftOver/
+           mode="+x"
+  become_user: root
+  become_method: sudo
+
+- name: Add /opt/liftOver to $PATH
+  lineinfile: dest=/home/{{galaxy_user}}/.bashrc
+              line="\n# Liftover binary path\nexport PATH=$PATH:/opt/liftOver"
+              state=present

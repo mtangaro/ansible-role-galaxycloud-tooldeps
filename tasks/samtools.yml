@@ -1,0 +1,31 @@
+---
+# SamTools installation recipe
+# http://www.htslib.org
+
+- name: Create SamTools destination directory
+  file: path=/opt/SamTools
+        state=directory
+        owner={{galaxy_user}}
+        group={{galaxy_user}}
+  become_user: root
+  become_method: sudo
+
+- name: Check and install dependencies
+
+- name: Download SamTools latest version
+  get_url: url=https://sourceforge.net/projects/samtools/files/latest
+           dest=/opt/Samtools/samtools.tar.bz2
+  become_user: root
+  become_method: sudo
+
+#- name: Extract tar file
+
+#- name: Running make
+#  command: 'make chdir=/opt/samtools/'
+#  become_user: root
+#  become_method: sudo
+
+#- name: Running make install
+#  command: 'make install chdir=/opt/samtools/'
+#  become_user: root
+#  become_method: sudo
