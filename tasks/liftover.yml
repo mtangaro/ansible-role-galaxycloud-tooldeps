@@ -1,9 +1,10 @@
 ---
-# Liftover installation recipe
+# LiftOver installation recipe
 
 #---
 # CentOS 7
-- name: Install Liftover depedencencies
+
+- name: Install liftOver depedencencies
   yum: name=libpng12
        state=present
   become_user: root
@@ -13,6 +14,12 @@
 #---
 # Ubuntu 14.04
 
+- name: Install liftOver depedencencies
+  apt: name=libpng
+       state=present
+  become_user: root
+  become_method: sudo
+  when: ansible_os_family == "Debian"
 
 #---
 
@@ -28,8 +35,6 @@
   get_url: url=http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver
            dest=/opt/liftOver/
            mode="a+x"
-  become_user: root
-  become_method: sudo
 
 - name: Add /opt/liftOver to $PATH
   lineinfile: dest=/home/{{galaxy_user}}/.bashrc

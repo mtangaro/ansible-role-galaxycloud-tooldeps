@@ -2,30 +2,61 @@
 # SamTools installation recipe
 # http://www.htslib.org
 
+#---
+# CentOS 7
+
+- name: Install SamTools depedencencies
+  yum: name={{item}}
+       state=present
+  with_items:
+    - libpng12
+    - ncurses
+    - ncurses-devel
+  become_user: root
+  become_method: sudo
+  when: ansible_os_family == "RedHat"
+
+#---
+# Ubuntu 14.04
+
+- name: Install SamTools depedencencies
+  apt: name={{item}}
+       state=present
+  with_items:
+    - libpng
+  become_user: root
+  become_method: sudo
+  when: ansible_os_family == "Debian"
+
+#---
+
 - name: Create SamTools destination directory
-  file: path=/opt/SamTools
+  file: path={{samtools_path}}
         state=directory
         owner={{galaxy_user}}
         group={{galaxy_user}}
   become_user: root
   become_method: sudo
 
-- name: Check and install dependencies
+#- name: Check and install dependencies
 
 - name: Download SamTools latest version
-  get_url: url=https://sourceforge.net/projects/samtools/files/latest
-           dest=/opt/Samtools/samtools.tar.bz2
-  become_user: root
-  become_method: sudo
+  get_url: url=https://github.com/samtools/samtools/releases/download/1.3.1/samtools-{{samtools_version}}.tar.bz2
+           dest={{samtools_path}}/samtools-{{samtools_version}}.tar.bz2
 
-#- name: Extract tar file
+# FIXME unarchive ansible module is not able to uncrompress files. A new module "uncompress" will be developed.
+# command module is used.
+- name: Extract tar.bz2 file
+  command: 'tar xvjf {{samtools_path}}/samtools-{{samtools_version}}.tar.bz2'
+  args:
+    chdir: '{{samtools_path}}'
 
-#- name: Running make
-#  command: 'make chdir=/opt/samtools/'
-#  become_user: root
-#  become_method: sudo
+- name: Running make
+  command: 'make'
+  args:
+    chdir: '{{samtools_path}}/samtools-{{samtools_version}}'
 
-#- name: Running make install
-#  command: 'make install chdir=/opt/samtools/'
-#  become_user: root
-#  become_method: sudo
+- name: Running make install
+  command: 'make prefix=/opt install'
+  args:
+    chdir: '{{samtools_path}}/samtools-{{samtools_version}}'

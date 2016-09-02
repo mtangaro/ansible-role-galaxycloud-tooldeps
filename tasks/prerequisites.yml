@@ -1,0 +1,59 @@
+---
+# Prerequisites installation recipe
+# Install CentOS 7 and Ubuntu 14.04 dependencies, creates directories.
+
+#---
+#CentOS 7
+
+- name: Install CentOS7 packages
+  yum: name={{item}}
+       state=present
+  with_items:
+    - unzip
+  become_user: root
+  become_method: sudo
+  when: ansible_os_family == "RedHat"
+
+- name: Install the 'Development tools' package group
+  yum: name="@Development tools"
+       state=present
+  become_user: root
+  become_method: sudo
+  when: ansible_os_family == "RedHat"
+
+#---
+# Ubuntu 14.04
+
+- name: Install Ubuntu packages
+  apt: name={{item}}
+       state=present
+  with_items:
+    - uzip
+  become_user: root
+  become_method: sudo
+  when: ansible_os_family == "Debian"
+
+
+#########################################################
+# Create directories
+
+- name: Create binary directory
+  file: path={{bin_path}}
+        state=directory
+        owner={{galaxy_user}}
+        group={{galaxy_user}}
+  become_user: root
+  become_method: sudo
+
+- name: Create binary directory
+  file: path={{share_path}}
+        state=directory
+        owner={{galaxy_user}}
+        group={{galaxy_user}}
+  become_user: root
+  become_method: sudo
+
+- name: Add /opt/bin to $PATH
+  lineinfile: dest=/home/{{galaxy_user}}/.bashrc
+              line="\n# Binary path\nexport PATH=$PATH:/opt/bin"
+              state=present

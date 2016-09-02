@@ -1,2 +1,16 @@
 ---
 # vars file for ansible-role-galaxycloud-tooldeps
+
+bin_path: "/opt/bin"
+share_path: "/opt/share"
+
+#################################
+# Liftover variables
+
+liftOver_path: /opt/liftOver
+
+#################################
+# SamTools variables
+
+samtools_path: /opt/samtools
+samtools_version: "1.3.1"
