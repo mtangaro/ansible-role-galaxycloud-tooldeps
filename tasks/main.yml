@@ -13,3 +13,13 @@
 - include: samtools.yml
   become_user: "{{galaxy_user}}"
   become: true
+
+# Fastqc
+- include: fastqc.yml
+  become_user: "{{galaxy_user}}"
+  become: true
+
+# RSEM
+- include: rsem.yml
+  become_user: "{{galaxy_user}}"
+  become: true
