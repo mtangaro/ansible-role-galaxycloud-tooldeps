@@ -1,6 +1,7 @@
 """
 this macro ...
-
+example:
+python refdata-configurator.py -g http://90.147.170.226/galaxy/ -a GALAXY_ADMIN_API_KEY
 """
 
 import datetime as dt
