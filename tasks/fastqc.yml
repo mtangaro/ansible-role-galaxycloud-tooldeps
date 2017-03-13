@@ -1,6 +1,10 @@
 ---
 # Fastqc installation recipe
 
+- name: Install fastqc using conda
+  command: "conda install fastqc=={{fastqc-version}}
+  
+
 #---
 # CentOS 7
 
@@ -15,7 +19,7 @@
 
 #---
 # Ubuntu 14.04
-#FIXME
+
 - name: Install fastqc depedencencies
   apt: name={{item}}
        state=present

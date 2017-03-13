@@ -18,12 +18,13 @@
 
 #---
 # Ubuntu 14.04
-#FIXME
+
 - name: Install SamTools depedencencies
   apt: name={{item}}
        state=present
   with_items:
     - libpng
+    - libncurses-dev
   become_user: root
   become_method: sudo
   when: ansible_os_family == "Debian"

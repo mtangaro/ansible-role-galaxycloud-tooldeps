@@ -1,7 +1,4 @@
 ---
-# Galaxy instance description
-galaxy_instance_description: "INDIGO-CNR test"
-
 # User to launch the Galaxy portal
 galaxy_user: galaxy
 
@@ -67,28 +64,3 @@ export_dir: "/export"
 refdata_dir: "/refdata"
 
 use_pbkdf2: true
-
-#################################
-# Postgres database details
-galaxy_db_dir: "{{export_dir}}/galaxy/database"
-galaxy_db_port: 5432
-
-#################################
-# NGINX
-nginx_upload_store_path: "{{galaxy_db_dir}}/tmp/nginx_upload_store"
-
-#################################
-# PROFTPD
-proftpd_welcome: "galaxy ftp server"
-proftpd_conf_path: "/etc/proftpd.conf"
-proftpd_db_user: "galaxyftp"
-proftpd_files_path: "{{galaxy_db_dir}}/ftp"
-proftpd_ftp_port: 21
-proftpd_passive_port_low: 30000
-proftpd_passive_port_high: 40000
-
-#################################
-# Supervisord
-supervisor_manage_postgres: "False"
-supervisor_manage_nginx: "False"
-supervisor_manage_proftpd: "False"
