@@ -7,7 +7,7 @@
 # Install dependencies
 
 # CentOS 7
-- name: '[EL] Install depedencencies'
+- name: '[EL] Install binary depedencencies'
   yum:
     name: "{{ item }}"
     state: present
@@ -17,7 +17,7 @@
   when: ansible_os_family == "RedHat"
 
 # Ubuntu
-- name: '[Ubuntu] Install depedencencies'
+- name: '[Ubuntu] Install binary depedencencies'
   apt:
     name: "{{ item }}"
     state: present
