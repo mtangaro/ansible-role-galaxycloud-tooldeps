@@ -7,9 +7,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - 'dejavu-*' # fix conda openjdk from defaults channels
-  become_user: root
-  become_method: sudo
+    - ['dejavu-fonts-common', 'dejavu-lgc-sans-fonts', 'dejavu-lgc-sans-mono-fonts', 'dejavu-lgc-serif-fonts', 'dejavu-sans-fonts', 'dejavu-sans-mono-fonts', 'dejavu-serif-fonts'] # fix conda openjdk from defaults channels
   when: ansible_os_family == "RedHat"
 
 # Ubuntu
@@ -19,6 +17,4 @@
     state: present
   with_items:
     - fonts-dejavu-core # fix conda openjdk from defaults channels
-  become_user: root
-  become_method: sudo
   when: ansible_os_family == "Debian"
