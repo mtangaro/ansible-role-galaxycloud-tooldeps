@@ -49,8 +49,10 @@ galaxy_lrms: local
 #______________________________________
 # Tool depenencies
 
-binary_dir: '/usr/bin'
-
+# tools binaries (e.g. liftover)
+bin_path: '/usr/bin'
+ucsc_download_url: 'http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64'
+install_bin: false
 
 #______________________________________
 # Missing tools

@@ -1,25 +1,4 @@
 ---
 # tasks file for ansible-role-galaxycloud-tooldeps
 
-# Install tools dependencies
-- include: prerequisites.yml 
-
-# liftOver
-- include: liftover.yml
-  become_user: "{{galaxy_user}}"
-  become: true
-
-# SamTools
-- include: samtools.yml
-  become_user: "{{galaxy_user}}"
-  become: true
-
-# Fastqc
-- include: fastqc.yml
-  become_user: "{{galaxy_user}}"
-  become: true
-
-# RSEM
-- include: rsem.yml
-  become_user: "{{galaxy_user}}"
-  become: true
+- include: install.yml

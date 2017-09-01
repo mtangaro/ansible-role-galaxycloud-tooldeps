@@ -1,0 +1,34 @@
+---
+# Tools binaries installation recipe
+# - liftover
+# - bedGraphToBigWig
+
+# CentOS 7
+- name: '[EL] Install depedencencies'
+  yum:
+    name: "{{ item }}"
+    state: present
+  whit_items:
+   - libpng12
+   - python-pysam
+  when: ansible_os_family == "RedHat"
+
+# Ubuntu
+- name: '[Ubuntu] Install depedencencies'
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libpng
+    - python-pysam
+  when: ansible_os_family == "Debian"
+
+#______________________________________
+- name: Download binaries
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dist }}"
+    mode: "a+x"
+  with_items:
+    - { url: '{{ ucsc_download_url }}//liftOver', dest: '{{ bin_path}}' }
+    - { url: '{{ ucsc_download_url }}/bedGraphToBigWig, dest: "{{ bin_path }}" }

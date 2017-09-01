@@ -1,0 +1,9 @@
+---
+# tasks file for ansible-role-galaxycloud-tooldeps
+
+# Install tools dependencies
+- include: prerequisites.yml 
+
+# binaries (e.g. liftover)
+- include: bin.yml
+  when: install_bin|bool
