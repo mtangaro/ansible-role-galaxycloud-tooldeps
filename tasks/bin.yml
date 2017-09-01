@@ -3,6 +3,9 @@
 # - liftover
 # - bedGraphToBigWig
 
+#______________________________________
+# Install dependencies
+
 # CentOS 7
 - name: '[EL] Install depedencencies'
   yum:
@@ -24,6 +27,8 @@
   when: ansible_os_family == "Debian"
 
 #______________________________________
+# Install binaries
+
 - name: Download binaries
   get_url:
     url: "{{ item.url }}"
@@ -31,4 +36,4 @@
     mode: "a+x"
   with_items:
     - { url: '{{ ucsc_download_url }}//liftOver', dest: '{{ bin_path}}' }
-    - { url: '{{ ucsc_download_url }}/bedGraphToBigWig, dest: "{{ bin_path }}" }
+    - { url: '{{ ucsc_download_url }}/bedGraphToBigWig', dest: '{{ bin_path }}' }
