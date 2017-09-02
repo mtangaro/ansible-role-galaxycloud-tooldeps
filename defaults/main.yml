@@ -49,7 +49,7 @@ galaxy_lrms: local
 #________________________________
 # Check if galaxy is up.
 # Galaxy is checked if up only during the instantiation process. On worker node configuration you don't need it, since galaxy is sending jobs to WNs.
-check_galaxy: false
+check_galaxy: true
 
 #________________________________
 # Missing tools
