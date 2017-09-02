@@ -1,0 +1,20 @@
+---
+# Prerequisites installation recipe
+
+#CentOS 7
+- name: '[EL] Install common dependencies'
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ['dejavu-fonts-common', 'dejavu-lgc-sans-fonts', 'dejavu-lgc-sans-mono-fonts', 'dejavu-lgc-serif-fonts', 'dejavu-sans-fonts', 'dejavu-sans-mono-fonts', 'dejavu-serif-fonts'] # fix conda openjdk from defaults channels
+  when: ansible_os_family == "RedHat"
+
+# Ubuntu
+- name: '[Ubuntu] Install common dependencies'
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - fonts-dejavu-core # fix conda openjdk from defaults channels
+  when: ansible_os_family == "Debian"

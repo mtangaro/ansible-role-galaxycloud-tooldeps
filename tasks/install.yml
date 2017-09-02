@@ -1,15 +1,24 @@
 ---
 # tasks file for ansible-role-galaxycloud-tooldeps
 
+- include: prerequisites.yml 
+
 # Check if Galaxy is up
 - include: check_galaxy.yml
   when: check_galaxy|bool
+
+# Check missing tools
+- name: Get missing tool list
+  include: get_missing_tools_list.yml
+  when: check_tools|bool
+  become_user: '{{ galaxy_user }}'
+  become: true
 
 # Get Galaxy and Conda versions
 - include: get_version.yml
 
 # Install tools dependencies
-- include: prerequisites.yml 
+- include: dependencies.yml
 
 # binaries (e.g. liftover)
 - include: bin.yml

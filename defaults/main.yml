@@ -46,18 +46,20 @@ galaxy_flavor: "galaxy-no-tools"
 # Galaxy virtual elastic cluster support: Currently supported local and slurm
 galaxy_lrms: local
 
-#______________________________________
+#________________________________
 # Check if galaxy is up.
 # Galaxy is checked if up only during the instantiation process. On worker node configuration you don't need it, since galaxy is sending jobs to WNs.
 check_galaxy: false
 
-#______________________________________
+#________________________________
+# Missing tools
+check_tools: true
+galaxy_tools_base_dir: '/tmp'
+
+#________________________________
 # Tool depenencies
 
 # tools binaries (e.g. liftover)
 bin_path: '/usr/bin'
 ucsc_download_url: 'http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64'
 install_bin: false
-
-#______________________________________
-# Missing tools

@@ -1,20 +1,65 @@
 ---
-# Prerequisites installation recipe
+# Create directories for reference data and logs
 
-#CentOS 7
-- name: '[EL] Install common dependencies'
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ galaxy_user }}"
+    group: "{{ galaxy_user }}"
+  with_items:
+    - '{{ galaxy_log_path }}'
+  become_user: root
+  become_method: sudo
+
+#______________________________________
+# Install dependencies
+
+- name: '[EL] Install packages'
   yum:
-    name: "{{ item }}"
+    name: '{{ item }}'
     state: present
   with_items:
-    - ['dejavu-fonts-common', 'dejavu-lgc-sans-fonts', 'dejavu-lgc-sans-mono-fonts', 'dejavu-lgc-serif-fonts', 'dejavu-sans-fonts', 'dejavu-sans-mono-fonts', 'dejavu-serif-fonts'] # fix conda openjdk from defaults channels
+    - lsof
+  become_user: root
+  become_method: sudo
   when: ansible_os_family == "RedHat"
 
-# Ubuntu
-- name: '[Ubuntu] Install common dependencies'
+- name: '[Ubuntu] Install packages'
   apt:
-    name: "{{ item }}"
+    name: '{{ item }}'
     state: present
   with_items:
-    - fonts-dejavu-core # fix conda openjdk from defaults channels
+    - lsof
+  become_user: root
+  become_method: sudo
   when: ansible_os_family == "Debian"
+
+#______________________________________
+# Install galaxyctl scripts
+
+- name: '[EL] Set supervisord conf path'
+  set_fact:
+    supervisord_conf_path: '/etc'
+  when: ansible_os_family == "RedHat" and init_type == "supervisord"
+
+- name: '[Ubuntu] Set supervisord conf path'
+  set_fact:
+    supervisord_conf_path: '/etc/supervisor'
+  when: ansible_os_family == "Debian" and init_type == "supervisord"
+
+- name: Check for galaxyctl script
+  stat: path='{{ galaxy_custom_script_path }}/galaxyctl'
+  register: galaxyctl_installed
+
+- name: Copy Galaxy management script
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: '{{ item.mode }}'
+  with_items:
+    - { src: 'galaxyctl_libs.py.j2', dest: '{{ galaxy_custom_script_path }}/galaxyctl_libs.py', mode: 'a+x' }
+    - { src: 'galaxyctl.py.j2', dest: '{{ galaxy_custom_script_path }}/galaxyctl', mode: 'a+x' }
+  become_user: root
+  become_method: sudo
+  when: not galaxyctl_installed.stat.exists
