@@ -1,6 +1,9 @@
 ---
 # tasks file for ansible-role-galaxycloud-tooldeps
 
+# Get Galaxy and Conda versions
+- include: get_version.yml
+
 # Install tools dependencies
 - include: prerequisites.yml 
 
