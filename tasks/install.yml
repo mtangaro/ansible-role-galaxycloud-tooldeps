@@ -7,13 +7,6 @@
 - include: check_galaxy.yml
   when: check_galaxy|bool
 
-# Check missing tools
-- name: Get missing tool list
-  include: get_missing_tools_list.yml
-  when: (galaxy_flavor != 'galaxy-no-tools') and (check_tools|bool)
-  become_user: '{{ galaxy_user }}'
-  become: true
-
 # Get Galaxy and Conda versions
 - include: get_version.yml
 

@@ -52,11 +52,6 @@ galaxy_lrms: local
 check_galaxy: true
 
 #________________________________
-# Missing tools
-check_tools: true
-galaxy_tools_base_dir: '/tmp'
-
-#________________________________
 # Tool depenencies
 
 # tools binaries (e.g. liftover)
