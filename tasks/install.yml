@@ -1,6 +1,10 @@
 ---
 # tasks file for ansible-role-galaxycloud-tooldeps
 
+# Check if Galaxy is up
+- include: check_galaxy.yml
+  when: check_galaxy|bool
+
 # Get Galaxy and Conda versions
 - include: get_version.yml
 

@@ -47,6 +47,11 @@ galaxy_flavor: "galaxy-no-tools"
 galaxy_lrms: local
 
 #______________________________________
+# Check if galaxy is up.
+# Galaxy is checked if up only during the instantiation process. On worker node configuration you don't need it, since galaxy is sending jobs to WNs.
+check_galaxy: false
+
+#______________________________________
 # Tool depenencies
 
 # tools binaries (e.g. liftover)

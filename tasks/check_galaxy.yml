@@ -1,0 +1,47 @@
+---
+#______________________________________
+# Install galaxyctl scripts
+
+- name: '[EL] Set supervisord conf path'
+  set_fact:
+    supervisord_conf_path: '/etc'
+  when: ansible_os_family == "RedHat" and init_type == "supervisord"
+
+- name: '[Ubuntu] Set supervisord conf path'
+  set_fact:
+    supervisord_conf_path: '/etc/supervisor'
+  when: ansible_os_family == "Debian" and init_type == "supervisord"
+
+- name: Check for galaxyctl script
+  stat: path='{{ galaxy_custom_script_path }}/galaxyctl'
+  register: galaxyctl_installed
+
+- name: Copy Galaxy management script
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: '{{ item.mode }}'
+  with_items:
+    - { src: 'galaxyctl_libs.py.j2', dest: '{{ galaxy_custom_script_path }}/galaxyctl_libs.py', mode: 'a+x' }
+    - { src: 'galaxyctl.py.j2', dest: '{{ galaxy_custom_script_path }}/galaxyctl', mode: 'a+x' }
+  when: not galaxyctl_installed.stat.exists
+
+#______________________________________
+# Check Galaxy
+
+- name: Copy check-galaxy script
+  template:
+    src: 'check_galaxy.py.j2'
+    dest: '/tmp/check_galaxy.py'
+    mode: a+x
+
+- name: Check Galaxy stats server
+  shell: '/usr/bin/python /tmp/check_galaxy.py'
+
+- name: Check if Galaxy is online
+  uri:
+    url: '{{ galaxy_instance_url }}'
+  register: result
+  until: result.status == 200
+  retries: 30
+  delay: 10
