@@ -9,8 +9,6 @@
     group: "{{ galaxy_user }}"
   with_items:
     - '{{ galaxy_log_path }}'
-  become_user: root
-  become_method: sudo
 
 #______________________________________
 # Install dependencies
@@ -21,8 +19,6 @@
     state: present
   with_items:
     - lsof
-  become_user: root
-  become_method: sudo
   when: ansible_os_family == "RedHat"
 
 - name: '[Ubuntu] Install packages'
@@ -31,9 +27,32 @@
     state: present
   with_items:
     - lsof
-  become_user: root
-  become_method: sudo
   when: ansible_os_family == "Debian"
+
+#______________________________________
+# Detect init system
+# Supported: supervisord, init
+
+- name: Check if Galaxy is managed by supervisor
+  supervisorctl: name="galaxy:" state=present
+  register: supervisor_galaxy
+  ignore_errors: yes
+
+- name: Set init-type to supervisord
+  set_fact:
+    init_type: 'supervisord'
+  when: supervisor_galaxy.failed is undefined
+
+- name: Check if Galaxy is managed by systemd/upstart
+  service: name="galaxy" state=started
+  register: systemd_galaxy
+  ignore_errors: yes
+  when: supervisor_galaxy.failed is defined
+
+- name: Set init-type to systemd
+  set_fact:
+    init_type: 'init'
+  when: supervisor_galaxy.failed is defined and systemd_galaxy.failed is undefined
 
 #______________________________________
 # Install galaxyctl scripts
@@ -60,6 +79,4 @@
   with_items:
     - { src: 'galaxyctl_libs.py.j2', dest: '{{ galaxy_custom_script_path }}/galaxyctl_libs.py', mode: 'a+x' }
     - { src: 'galaxyctl.py.j2', dest: '{{ galaxy_custom_script_path }}/galaxyctl', mode: 'a+x' }
-  become_user: root
-  become_method: sudo
   when: not galaxyctl_installed.stat.exists

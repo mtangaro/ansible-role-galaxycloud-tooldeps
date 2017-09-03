@@ -51,6 +51,12 @@ galaxy_lrms: local
 # Galaxy is checked if up only during the instantiation process. On worker node configuration you don't need it, since galaxy is sending jobs to WNs.
 check_galaxy: true
 
+#______________________________________
+# Init system
+# Supported: supervisord, init
+# The role check automatically, in task/prerequisites, if the system is managed through supervisord or systemd/upstart and update this variable.
+init_type: 'supervisord'
+
 #________________________________
 # Tool depenencies
 
