@@ -2,30 +2,38 @@
 #______________________________________
 # get Galaxy version from api
 
-- get_url:
+- name: Get galaxy version json 
+  get_url:
     url: '{{ galaxy_instance_url }}api/version'
     dest: '/tmp/galaxy_version.json'
 
-- set_fact:
+- name: Set Galaxy version variable
+  set_fact:
     GALAXY_VERSION: "{{ (lookup('file', '/tmp/galaxy_version.json') | from_json).get('version_major') }}"
 
-- shell: 'echo {{ GALAXY_VERSION }} >> /tmp/galaxy_version'
+- name: Print out Galaxy version
+  shell: 'echo {{ GALAXY_VERSION }} >> /tmp/galaxy_version'
 
 #______________________________________
 # Get Conda version
 
-- set_fact:
-    conda_prefix: "{{ lookup('ini', 'conda_prefix section=app:main file=galaxy_config_file') }}"
-    tool_deps_path: "{{ lookup('ini', 'tool_dependency_dir section=app:main file=galaxy_config_file') }}"
+- name: Get conda_prefix and tool_deps_path variables
+  set_fact:
+    conda_prefix: "{{ lookup('ini', 'conda_prefix section=app:main file={{galaxy_config_file}}') }}"
+    tool_deps_path: "{{ lookup('ini', 'tool_dependency_dir section=app:main file={{galaxy_config_file}}') }}"
 
-- set_fact:
+- name: Set conda_prefix variable
+  set_fact:
     conda_prefix: '{{ tool_deps_path}}/_conda'
   when: (conda_prefix == []) or (conda_prefix == "<tool_dependency_dir>/_conda")
 
-- shell: '{{ conda_prefix }}/bin/conda --version'
+- name: Get Conda version
+  shell: '{{ conda_prefix }}/bin/conda --version'
   register: results
 
-- set_fact:
+- name: Set Conda version variable
+  set_fact:
     conda_version: "{{ results.stdout | regex_replace('conda ', '') }}"
 
-- shell: 'echo {{ conda_version }} >> /tmp/galaxy_version'
+- name: Print out Conda version
+  shell: 'echo {{ conda_version }} >> /tmp/galaxy_version'
