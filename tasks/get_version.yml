@@ -22,6 +22,9 @@
     conda_prefix_section: "conda_prefix section=app:main file={{galaxy_config_file}}"
     tool_dependency_dir_section: "tool_dependency_dir section=app:main file={{galaxy_config_file}}"
 
+- shell: 'echo {{ conda_prefix_section }} >> /tmp/galaxy_version'
+- shell: 'echo {{ tool_dependency_dir_section }} >> /tmp/galaxy_version'
+
 - name: Get conda_prefix and tool_deps_path variables
   set_fact:
     conda_prefix: "{{ lookup('ini', conda_prefix_section) }}"
