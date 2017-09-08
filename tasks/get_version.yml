@@ -17,23 +17,27 @@
 #______________________________________
 # Get Conda version
 
-- name: Prevent lookup ini file not found error
-  set_fact:
-    conda_prefix_section: "conda_prefix section=app:main file={{galaxy_config_file}}"
-    tool_dependency_dir_section: "tool_dependency_dir section=app:main file={{galaxy_config_file}}"
+- name: Copy Galaxy management script
+  template:
+    src: 'read_ini_file.py.j2'
+    dest: '/tmp/read_ini_file.py'
 
-- shell: 'echo {{ conda_prefix_section }} >> /tmp/galaxy_version'
-- shell: 'echo {{ tool_dependency_dir_section }} >> /tmp/galaxy_version'
+- name: Get conda prefix from {{ galaxy_config_file }}
+  command: '{{ galaxy_venv_path }}/bin/python /tmp/read_ini_file.py -c {{ galaxy_config_file }} -s app:main -o conda_prefix'
+  register: galaxy_conda_prefix
 
-- name: Get conda_prefix and tool_deps_path variables
-  set_fact:
-    conda_prefix: "{{ lookup('ini', conda_prefix_section) }}"
-    tool_deps_path: "{{ lookup('ini', tool_dependency_dir_section) }}"
+- name: Get tool dependency directory path from {{ galaxy_config_file }}
+  command: '{{ galaxy_venv_path }}/bin/python /tmp/read_ini_file.py -c {{ galaxy_config_file }} -s app:main -o tool_dependency_dir'
+  register: tool_deps_path
 
 - name: Set conda_prefix variable
   set_fact:
-    conda_prefix: '{{ tool_deps_path}}/_conda'
-  when: (conda_prefix == []) or (conda_prefix == "<tool_dependency_dir>/_conda")
+    conda_prefix: '{{ galaxy_conda_prefix.stdout }}'
+
+- name: Set conda_prefix variable
+  set_fact:
+    conda_prefix: '{{ tool_deps_path.stdout }}/_conda'
+  when: (galaxy_conda_prefix.stdout == []) or (galaxy_conda_prefix.stdout == "<tool_dependency_dir>/_conda")
 
 - name: Get Conda version
   shell: '{{ conda_prefix }}/bin/conda --version'
