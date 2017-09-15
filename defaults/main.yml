@@ -51,6 +51,9 @@ galaxy_lrms: local
 # Galaxy is checked if up only during the instantiation process. On worker node configuration you don't need it, since galaxy is sending jobs to WNs.
 check_galaxy: true
 
+# Check Galaxy and Conda versions
+get_version: false
+
 #______________________________________
 # Init system
 # Supported: supervisord, init
