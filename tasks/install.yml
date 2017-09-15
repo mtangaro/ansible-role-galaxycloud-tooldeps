@@ -9,7 +9,7 @@
   when: check_galaxy|bool
 
 # Get Galaxy and Conda versions
-- include: get_version.yml
+#- include: get_version.yml
 
 # Install tools dependencies
 - include: dependencies.yml
