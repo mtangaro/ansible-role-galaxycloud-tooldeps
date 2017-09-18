@@ -52,7 +52,7 @@ galaxy_lrms: local
 check_galaxy: true
 
 # Check Galaxy and Conda versions
-get_version: true
+get_version: false
 
 #______________________________________
 # Init system
