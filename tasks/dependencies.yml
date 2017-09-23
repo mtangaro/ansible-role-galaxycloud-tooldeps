@@ -12,4 +12,5 @@
   command: '{{ conda_prefix }}/bin/conda install -y --name {{ fastqc_conda_env.stdout }} openjdk --channel conda-forge'
   when: 
    - node_type == 'front'
+   - fastqc_conda_env.failed is not defined
    - GALAXY_VERSION in fastqc_fix_galaxy_list
