@@ -1,20 +1,11 @@
 ---
 # Prerequisites installation recipe
 
-#CentOS 7
-- name: '[EL] Install common dependencies'
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - ['dejavu-fonts-common', 'dejavu-lgc-sans-fonts', 'dejavu-lgc-sans-mono-fonts', 'dejavu-lgc-serif-fonts', 'dejavu-sans-fonts', 'dejavu-sans-mono-fonts', 'dejavu-serif-fonts'] # fix conda openjdk from defaults channels
-  when: ansible_os_family == "RedHat"
+- include_vars: fastqc_fix.yml
+  when: node_type == 'front'
 
-# Ubuntu
-- name: '[Ubuntu] Install common dependencies'
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - fonts-dejavu-core # fix conda openjdk from defaults channels
-  when: ansible_os_family == "Debian"
+- name: 'Fix fastqc java fonts dependency: https://github.com/conda-forge/staged-recipes/issues/3164'
+  command: '{{ conda_prefix }}/bin/conda install -y --name __fastqc@{{ fastqc_version }} openjdk --channel conda-forge'
+  when: 
+   - node_type == 'front'
+   - GALAXY_VERSION in fastqc_fix_galaxy_versions
