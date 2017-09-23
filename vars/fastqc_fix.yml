@@ -1,3 +1,3 @@
 ---
 fastqc_version: '0.11.5'
-fastqc_fix_galaxy_versions: ['master', 'release_17.01', 'release_17.05']
+fastqc_fix_galaxy_list: ['master', 'release_17.01', 'release_17.05']

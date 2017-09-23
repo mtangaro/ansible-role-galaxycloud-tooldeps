@@ -8,4 +8,4 @@
   command: '{{ conda_prefix }}/bin/conda install -y --name __fastqc@{{ fastqc_version }} openjdk --channel conda-forge'
   when: 
    - node_type == 'front'
-   - GALAXY_VERSION in fastqc_fix_galaxy_versions
+   - GALAXY_VERSION in fastqc_fix_galaxy_list
