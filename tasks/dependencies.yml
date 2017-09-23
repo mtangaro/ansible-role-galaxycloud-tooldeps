@@ -7,6 +7,7 @@
 - name: Get fastqc conda env
   command: '{{ galaxy_venv_path }}/bin/python /tmp/parse_conda_envs.py -c {{ conda_prefix }} -t fastqc'
   register: fastqc_conda_env
+  ignore_errors: yes
 
 - name: 'Fix fastqc java fonts dependency: https://github.com/conda-forge/staged-recipes/issues/3164'
   command: '{{ conda_prefix }}/bin/conda install -y --name {{ fastqc_conda_env.stdout }} openjdk --channel conda-forge'
