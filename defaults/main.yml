@@ -46,13 +46,19 @@ galaxy_flavor: "galaxy-no-tools"
 # Galaxy virtual elastic cluster support: Currently supported local and slurm
 galaxy_lrms: local
 
+# Type of node to install: front or wn
+type_of_node: front
+
 #______________________________________
+# Init system
+# Supported: supervisord, init
+# The role check automatically, in task/prerequisites, if the system is managed through supervisord or systemd/upstart and update this variable.
+init_type: 'supervisord'
+
+#________________________________
 # Tool depenencies
 
 # tools binaries (e.g. liftover)
 bin_path: '/usr/bin'
 ucsc_download_url: 'http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64'
 install_bin: false
-
-#______________________________________
-# Missing tools
